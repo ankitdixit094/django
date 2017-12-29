@@ -899,3 +899,17 @@ def pprint(value):
         return pformat(value)
     except Exception as e:
         return "Error in formatting: %s: %s" % (e.__class__.__name__, e)
+
+
+@register.filter(is_safe=True)
+def replace(value, arg):
+    if not isinstance(arg, tuple):
+        raise ValueError("Error in formatting: %s" % (arg))
+    old = str(arg[0])
+    new = str(arg[1])
+    try:
+        maxreplace = int(arg[2])
+    except IndexError:
+        maxreplace = -1
+    value = str(value).replace(old, new, maxreplace)
+    return value
